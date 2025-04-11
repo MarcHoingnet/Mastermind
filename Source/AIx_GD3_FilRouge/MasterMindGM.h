@@ -25,6 +25,15 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	TArray<uint8> Solution;
+
+	UPROPERTY(BlueprintReadOnly)
+	int32 AttemptCount = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Settings")
+	int32 MaxAttempts = 8;
+
+	UFUNCTION(BlueprintCallable)
+	bool HasRemainingAttempts() const;
 	
 protected:
 	// Called when the game starts or when spawned

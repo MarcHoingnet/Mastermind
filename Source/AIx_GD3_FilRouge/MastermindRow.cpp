@@ -29,9 +29,15 @@ void AMastermindRow::Tick(float DeltaTime)
 
 void AMastermindRow::Clicked()
 {
+	if (!Manager || !Manager->HasRemainingAttempts())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Impossible de continuer, nombre max d'essais atteint."));
+		return;
+	}
+
 	TArray<uint8> Answer;
 	Answer.SetNum(4);
-	for(int i = 0; i < 4; i++)
+	for (int i = 0; i < 4; i++)
 	{
 		Answer[i] = PlayerSpheres[i]->GetComponentByClass<UMastermindSphere>()->GetSphereColor();
 	}

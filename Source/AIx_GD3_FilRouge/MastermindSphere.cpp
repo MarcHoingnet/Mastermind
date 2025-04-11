@@ -45,25 +45,32 @@ void UMastermindSphere::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 
 void UMastermindSphere::Clicked(UPrimitiveComponent* ClickedComp, FKey ButtonPressed)
 {
+	if (bIsBlocked) return;
+
 	UE_LOG(LogTemp, Warning, TEXT("Composant cliqué !"));
-	ActualColorNumber ++;
+
+	ActualColorNumber++;
 	if (ActualColorNumber >= 6)
 	{
 		ActualColorNumber = 0;
 	}
-	if(Manager)
+
+	if (Manager)
 	{
 		ChangeColor(Manager->GetColor(ActualColorNumber));
 	}
-	
 }
 
 void UMastermindSphere::Unblock()
 {
+	bIsBlocked = false;
+	ChangeColor(Manager->GetColor(ActualColorNumber));
 }
 
 void UMastermindSphere::Block()
 {
+	bIsBlocked = true;
+	ChangeColor(BlockedColor);
 }
 
 void UMastermindSphere::ChangeColor(FLinearColor NewColor)

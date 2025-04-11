@@ -18,6 +18,9 @@ public:
 	// Sets default values for this component's properties
 	UMastermindSphere();
 
+	UPROPERTY()
+	bool bIsBlocked = false;
+
 	UPROPERTY(EditAnywhere)
 	AMasterMindGM* Manager;
 

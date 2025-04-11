@@ -48,34 +48,42 @@ void AMasterMindGM::CreateSolution()
 
 bool AMasterMindGM::CheckAnswer(TArray<uint8> Answer)
 {
+	if (!HasRemainingAttempts())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Plus d'essais restants !"));
+		return false;
+	}
+
+	AttemptCount++;
+
 	bool result = true;
 	uint8 GoodPlaces = 0;
 	uint8 WrongPlaces = 0;
-	TArray<bool> SolutionsAllowed {true,true,true,true};
-	TArray<bool> AnswersAllowed {true,true,true,true};
-	for(uint8 i = 0; i < 4; i++)
+
+	TArray<bool> SolutionsAllowed{ true,true,true,true };
+	TArray<bool> AnswersAllowed{ true,true,true,true };
+
+	for (uint8 i = 0; i < 4; i++)
 	{
-		if(Solution[i] == Answer[i])
+		if (Solution[i] == Answer[i])
 		{
 			SolutionsAllowed[i] = false;
 			AnswersAllowed[i] = false;
 			GoodPlaces++;
-		} else
+		}
+		else
 		{
 			result = false;
 		}
 	}
-	// GoodPlaces contient le nombre de réponses bien placées
 
-
-	// Recherche des réponses mal placées
-	for(uint8 i = 0; i < 4; i++)
+	for (uint8 i = 0; i < 4; i++)
 	{
-		if(AnswersAllowed[i])
+		if (AnswersAllowed[i])
 		{
-			for(uint8 j = 0; j < 4; j++)
+			for (uint8 j = 0; j < 4; j++)
 			{
-				if(SolutionsAllowed[j] && Answer[i] == Solution[j])
+				if (SolutionsAllowed[j] && Answer[i] == Solution[j])
 				{
 					WrongPlaces++;
 					SolutionsAllowed[j] = false;
@@ -85,8 +93,23 @@ bool AMasterMindGM::CheckAnswer(TArray<uint8> Answer)
 		}
 	}
 
+	OnSolutionChecked.Broadcast(GoodPlaces, WrongPlaces);
+
+	if (!HasRemainingAttempts() && !result)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Tentatives épuisées. Partie terminée."));
+	}
+
+	return result;
+}
+
 	OnSolutionChecked.Broadcast(GoodPlaces,WrongPlaces);
 	UE_LOG(LogTemp,Warning,TEXT("CheckAnswer Done"));
 	return result;
+
+	bool AMasterMindGM::HasRemainingAttempts() const
+	{
+		return AttemptCount < MaxAttempts;
+	}
 }
 
