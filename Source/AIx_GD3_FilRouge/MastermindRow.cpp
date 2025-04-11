@@ -44,6 +44,22 @@ void AMastermindRow::Clicked()
 	Manager->CheckAnswer(Answer);
 }
 
+void AMastermindRow::GenerateNewSpheres()
+{
+	for (int i = 0; i < 4; i++)
+	{
+
+		FVector NewLocation = FVector(100.f * i, 0.f, 0.f); 
+		AActor* NewSphere = GetWorld()->SpawnActor<AActor>(PlayerSpheres[i]->GetClass(), NewLocation, FRotator::ZeroRotator);
+
+		UMastermindSphere* MastermindSphere = NewSphere->FindComponentByClass<UMastermindSphere>();
+		if (MastermindSphere)
+		{
+			MastermindSphere->ChangeColor(Manager->GetColor(FMath::RandRange(0, 5)));
+		}
+	}
+}
+
 void AMastermindRow::ApplySolution(uint8 GoodPlaces, uint8 WrongPlaces)
 {
 }
